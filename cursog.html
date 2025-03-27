@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+<body>
+    <center>
+        <body style="background-color: rgb(255, 255, 255);"></body>
+        <h1>Curso Git & GitHub</h1>
+        <h3>1. Criar uma conta no GitHub;</h3>
+        <h3>2. Instalar o Git no computador;</h3>
+        <h3>3. No terminal do próprio VS Code, executar os seguintes comandos:</h3>
+        <p>abra seu projeto no VS, e execute em seguida: 
+        <p>'git init' - caso dê algum erro, garantuir que a variável de ambiente PATH esteja correta no seu computador.</p>
+        <p>'git add' - em seguida, esse servirá para adicionar todos os arquivos do projeto, para não precisar adicionar um por um, utilizaremos um atalho: 'git add .' o "." fará com que todos os arquivos do projeto sejam adicionados de uma só vez.</p>
+        <p>'git commit -m "nome do commit desejado" - esse comando criará o primeiro commit.</p>
+        <p>feito isso, pode ser que apareça um erro de autor desconhecido, se isso acontecer, deverá ser executado o seguinte comando:</p>
+        <p>'git config --global user.email "sofia.deniz@metam.com.br" ' - ou o e-mail desejado.</p>
+        <h3>em seguida:</h3>
+        <p>'git config --global user.name "Sofia Deniz" - para user</p>
+        <p>voltando para o comando:</p>
+        <p>'git commit -m "primeiro commit"</p>
+        <p>'git branch -M main'</p>
+        <p>'git remote add origin https://github.com/sofia.deniz@metam.com.br/numero-secreto.git' - comando que gerará o link que fará a conexão do git com o console do VS Code, versão HTTP, mas a recomendada é SSH, então:</p>
+        <p>'git remote add origin git@github.com:sofia.deniz@metam.com.br/numero-secreto.git'</p>
+        <p>'git push -u origin main' - serve para "push" enviar para o git.
+        <p>um erro comum após a execução dos comandos acima, é o git não reconhecer a máquina utilizada para fazer a conexão entre ambos, pra isso é necessário realizar os ajustes no próprio git.
+        <p>clicando no canto da tela do lado direito, vamos no nosso perfil, depois no menu a esquerda, clicamos em 'SSH and GPG keys', em seguida clicar no botão "New SSH key", depois ele pede um título que podemos escolher, recomendação "notebook pessoal", depois tem as opções de chave, é a de autenticação, e em seguida é pedido uma chave da qual podemos pegar no terminal ou na nossa próproia máquina. que é entrando na pasta do usuário e procurar uma sala oculta chamada ".ssh", se a pasta estiver vazia, é necessário realizar pelo terminal, usando o comando:</p>
+        'ssh-keygen -t ed25519 -C "sofia.deniz@'metam.com.br" - depois só ir dando enter até a chave ser gerada, agora podemos pegar na pasta, irá ter 2 arquivos, uma chave pública e outra privada, para pegar, é necessário clicar no arquivo e abrir, normalmente com o bloco de notas, utilizaremos a pública, depois podemos utilizar o outro comando:
+        'git push -u origin main'
+        depois podemos ir para a página do repositório ver se deu certo! :) se tiver aparecido os arquivos, deu certo <3
+        <br>
+        <br>
+        <h1>Clonando repositório:</h1>background-color
+            
+        <p>no repositório, quando clicamos no botão "code", aparece a opção de zipar, abrir com github desktop e clone, se só fizermos o download do zip, vamos perder os comandos já executamos no terminal do vs code, então precisamos clonar. Para isso, será necessário copiar o linbk que o github dá, depois abrirmos a biblioteca > área de trabalho > botão direito do mouse + abrir o terminal do windows/linux nesse caso, no terminal iremos executar:
+            
+        <p>'git clone (+ o link coipiado)
+            
+        <p>Depois será poissível ver uma pasta na sua máquina com os arquivos clonados.
+            
+            
+        <p>Commit (Remember :')</p>
+             
+        <h2>comandos:</h2> 
+        git status - para mostrar qual o status atualizado do repositório atual, últimas alteraçõeas, etc</p>
+            
+        quando é realizado um'a alteração, quando executarmso git status, as últimas alterações aparecerão em vermelho, pois não foram adicionadas ainda, para isso é necessário adicionar o comando:</p>
+            
+        git add . 
+            
+        depois podemnos dar git status - aparecerá em verde as últimas alterações.</p>
+            
+        after that, damos o commit:</p>
+            
+        git commit -m "Tal mudança" - m significa mensagem, no repositório nomear os commits ajudarão a saber quais mudanças foram feitas.</p>
+
+        git log - mostra o histórico dos commits que foram feitos, mostra o autor, data e a mensagem do commit.</p>
+            
+        git remote - mostra quais repositórios temos</p>
+            
+        git push origin main </p>
+            
+        git pull origin main - serve para trazer os demais commits para o meu repositório local</p>
+            
+        git log - para confirmar se o commit veio para o repositório local</p>
+            
+        <h2>Existe uma forma de fazer um "commit" sem utilizar comandos, utilizando o terceiro icon do menu lado direito do vs code. clicando no mesmo, é possível criar um commit e sincronizá-lo apenas com um botão.</h2>
+            
+        caso eu queira fazer um ctrl z do último commit, fazer com que ele volte para o que era antes, utilizarei:</p>
+        'git log' - mostra o histórioco juntamente com o hash, copiar o hash do commit desejado.</p>
+        'git revert rfu83htyurfhui23qj'</p>
+            
+        o histórico vai aparecer que foi resetado.</p>
+            
+        <h2>para apagar:</h2>
+        fazer um commit</p>
+        git commit -m "remove título" ' para fazer o commit</p>
+            
+        git reset --hard [+i'd do commit anterior, que seria po id do commit que a gente quer voltar]</p>
+            
+        para alterar o nome do commit (caso tenha digitado errado opu só queira editar:</p>
+            
+        git commit --amend -m "Atualização"</p>
+            
+        README - basicamente é um arquivo opcional do qual você pode escrever e explicar como quiser.</p>
+            
+        se eu quiser fazer um rascunho, ou seja, ter um arquivo que não precisa ser lido, utilizamos 'git ignore', dependendo da tecnologia utilizada, podemos buscar por 'gitignore.io' no navegador, ele dará o código certo para linguagem especifica.</p>
+            
+        para também usar de rascunho, ou se quiser compartilhar alguma ideia isolada sua, podemos utilizar o gist.</h3>
+    </center>
+</head>>
+</body>
