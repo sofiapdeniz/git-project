@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+<body>
+    <center>
+        <body style="background-color: rgb(255, 255, 255);"></body>
+
+        <h1>COMANDOS TERMINAL LINUX</h1>
+
+        </h2>Linux: Terminal: Remember</h2>
+        <p>pwd - Mostra o local (diretório) do qual você se encontra atualmente.
+        ls - lista o conteúdo dentro da pasta/diretório.
+        ls -a - mostra todos os arquivos (ocultos) da pasta/diretório.
+        ls -al (ll) - "longa lista", mostra mais detalhes da lista.
+         ls --help - mostra os demais comandos que podem ser usados.
+         man ls - também
+        ctrl +l e clear: limpa a tela
+        cd - change director, muda de diretório
+        cd /etc - etc é onde fica as configs do sistema
+         . - diretório corrente
+         .. - diretório "pai" do qual você está.
+         cd - - volta para o diretório anterior
+         mkdir - make a directory - cria um diretório:
+         por exemplo, utiliza-se: mkdir teste
+         touch - cria arquivos zerados
+         rmdi - remove diretório.
+         cp - copy (copiar diretório)
+         - r - conteúido dentro de um diretório
+         exempolo de copy:
+         cd dir1
+         cp -r * ../dir2
+         ls
+         para renomear:
+         mv dir1 dir4 (renomeou dir1 para o dir4)
+         history - mostra todos os comandos já utilizados.
+         ls * - mostra tudo menoss ocultos.
+         outros exemplos:
+         ls arq1*
+         retorna arq1, arq10 e arq100
+         ls arq1
+         retorna arq10
+         se eu possuo um arquivo, do qual existem outros numerados de 1 até 100, mas eu preciso listar os de 1 até 5, eu faço dessa maneira (porém os ? são de acordo com o tamanhode caracter de um arquivo. por exemplo, "arq5"
+         ls ???[1-5]</p>
+        <br>
+        <p>Reagir
+        
+        Responder</p>
+        
+        <p>Quando não lembrar o nome do diretório, pode-se usar o *, por exemplo:
+        ls /etc/servi*
+        caso não lembrar do nome do diretório.
+        - *: faz a busca por todos os arquivos.
+        - cat: mostra o conteúdo de texto, se for arquivos binários mostrará cartacteres.
+        - grep: várias funções, como por exemplo, busca.
+        - -i: ignora se a letra é maiúscula ou minúscula.
+        - passwd (está dentro do etc) - ele é a base de dados dos usuários, base de dados local.
+        - tail: mostra as últimas linhas
+        tail -n 3 /etc/passwd: esse comando vai mostrar as últimas 3 linhas
+        - head: mostra as primeiras
+        - find: ex: podemos achar nome, infos
+        sudo find / -size +100M
+        comando para mostrar arquivos com mais de 100MB
+        sudo find / -size 3G
+        irá mostrar arquivos com exatos 3GB
+        relacionamento e pipe (assistir de novo depois)
+        para buscar arquivo com nome específico, é necessário utilizar  ^ no inicio e $ no final
+        ex:
+        "^computer$
+        para pesquisar mais de uma:
+        "^note$ | "ĉomputer$"
+        a barra | se chama pipe
+        :q! - comando para executar</p>
+        
+        comando para salvar uma alteração no terminal:
+        :x
+        
+        Criando e configurando scripts: Variáveis e scripts.
+        env no terminal
+        comando que irá mostrar as variáveis e o que elas armazenam, entre outras informações. 
+        para olhar os valores das variáveis utilizamos "echo"
+        echo $HOME
+        ou
+        echo $PWD
+        etc...
+
+        seguindo os passos.
+        Configurando e executando scripts:
+        echo "digite o diretorio de backup:"    
+        read diretorio_bkp (nome da vartiável onde vai ser armazenado o valor inserido acima)
+           cp -rv $diretorio_bkp ~/backup 
+           echo ""
+           echo "Backup Concluído!"
+           '#' isso é o comando para fazer o backup
+        ./backup.sh 
+        /usr/bin
+        '#' isso acima é o que fazemos para chamar o mesmo
+        no final o -rv do comando fará com que printe na tela o backup, depois a mensagem "Backup Concluído' aparecerá na tela.
+        caso eu esteja em um outro diretório, ainda assim é possível executar o comando, utilizando a variável de ambiente PATH,o comando seria:
+        /home/sofia/labs/scripts/backup.sh
+        então para executar o comando, ou preciso estar na pasta onde está o script, ou utilizar o comando acima quando estiver em um outro diretório.
+        
+        Obtendo informações do Sistema:
+         ip addr
+         hostname -i
+         ambos acima mostram o ip
+            
+        Criando e configurando scripts: Variáveis e scripts.
+
+env no terminal
+
+comando que irá mostrar as variáveis e o que elas armazenam, entre outras informações. 
+        # é utilizado para comentar, portante ele na primeira linha acompanhado do !, serve para identificar qual o shell que vai ser utilizado, exemplo:
+        #!/bin/bash    bash no caso é o shell que está sendo utilizado.
+para olhar os valores das variáveis utilizamos "echo"
+echo $HOME
+ou
+echo $PWD
+etc...
+
+'#'é utilizado para comentar, portante ele na primeira linha acompanhado do !, serve para identificar qual o shell que vai ser utilizado, exemplo:
+
+'#!/bin/bash'    bash no caso é o shell que está sendo utilizado.
+        # é utilizado para comentar, portante ele na primeira linha acompanhado do !, serve para identificar qual o shell que vai ser utilizado, exemplo:
+        #!/bin/bash    bash no caso é o shell que está sendo utilizado.
+seguindo os passos.
+
+
+
+
+Configurando e executando scripts:
+
+echo "digite o diretorio de backup:"    
+read diretorio_bkp #nome da vartiável onde vai ser armazenado o valor inserido acima
+
+   cp -rv $diretorio_bkp ~/backup 
+   echo ""
+   echo "Backup Concluído!"
+   # isso é o comando para fazer o backup
+
+./backup.sh 
+/usr/bin
+# isso acima é o que faz        # é utilizado para comentar, portante ele na primeira linha acompanhado do !, serve para identificar qual o shell que vai ser utilizado, exemplo:
+        #!/bin/bash    bash no caso é o shell que está sendo utilizado.
+
+no final o -rv do comando fará com que printe na tela o backup, depois a mensagem "Backup Concluído' aparecerá na tela.
+
+caso eu esteja em um outro diretório, ainda assim é possível executar o comando, utilizando a variável de ambiente PATH,o comando seria:
+
+/home/sofia/labs/scripts/backup.sh
+
+então para executar o comando, ou preciso estar na pasta onde está o script, ou utilizar o comando acima quando estiver em um outro diretório.
+
+
+
+
+Obtendo Informações da rede:
+
+
+(ainda não finalizado)</p>
+</center>
+</body>
