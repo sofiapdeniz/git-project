@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+<body>
+    <center>
+        <body style="background-color: rgb(255, 255, 255);"></body>
+<center>
+<h1>DOCKER:</h1>
+<p>É um "carinha" que te ajuda a executar containers, só que containers vieram muito antes do Docker, Docker popularizou o Container.
+Surgiu em 2013</p>
+
+
+<h1>Container: Isolamento</h1>
+<p>Como se estivesse uma parte do computador onde o container se encontra, isolada. Toda vez que falamos de containers, falamos de isolamento.
+Container não é uma máquina virtual "pequenininha" como costumam dizer. Container nada mais é do que uma forma de fazer um isolamento.
+Existem dois tipos de isolamento, uma que seria mais lógica como: processos, usuários, networking
+E outra mais física (nossos recurso): CPU, memória, disco, rede...<p>
+
+<h1>Copy on Write: Imagem de Container: Existem várias camadas</h1>
+<p>Não é legal criar várias camadas
+Somente a última camada é leitura e escrita (read and write), todas as demais camadas são somente leitura (RO)
+Cada instrução vai fazer uma camada
+Então suponhamos, se fosse necessário editar um 'a' que fosse um uma camada abaixo, criaria uma cópia, a camada que eu precisaria editar criaria uma cópia e iria pra camada de cima (a única que é possível editar), o Docker clona pois por exemplo, se houverem 10 containers em execução, eles estão utilizando a mesma imagem, então, se uma fosse editada, todas seriam, por isso o clone na última camada.</p>
+
+<h1>Máquina Virtual tem seu próprio kernel, o sistema operacional inteiro.</h1>
+Já os containers não, eles utilizam o kernel do próprio host, do Linux, se por exemplo, houverem 10 containers em execução, todos eles estarão utilizando o kernel do host.
+
+No kernel do linux temos diversos módulos que são importantes para que o Docker funcione fazendo com que os containers consigam se comunicar.
+
+<h4>Erro na minha VirtualBox, resolver na faculdade!
+Enquanto isso, vamos entender e anotar os comandos e depois testar:</h4>
+ 
+<p>1º Passo: Instalar o docker, site:
+https://docs.docker.com/install/
+Existem dois tipos de Docker, CE e EE, utilizaremos o CE.
+ 
+Para instalar, podemos utilizar o comando no terminal:
+
+'curl -fsFS https://get.docker.com | bash'
+
+Depois da instalação. o docker irá mostrar várias mensagens no terminal, sendo uma delas, Client e as informações, e depois Server, e as informações.
+
+Basicamente o 'Client' é o Docker, o comando que estamos utilizando, já o Server é o que vai executar os containers.
+
+
+o comando:
+'docker version'
+vai mostrar a versão do docker que está utilizando.
+
+'docker container ls' - ls irá listar o conteúdo do diretório
+
+'history' - irá mostrar o histórico de comandos utilizados anteriormente.
+
+'docker ps' - serve para ver todos os conatiners em execução na máquina, comando antigo, o atual é ls.
+
+'docker container run -ti hello-world' - primeira imagem criada :) essa mensagem executa no terminal uma mensagem específica no terminal. a única função desse é mostrar essa mensagem e depois "morrer".
+
+'docker container ls -a' - mostra todos os containers, o que estão em execução e os que estão "mortos", ou seja, não funcionam mais.
+
+'docker container run -ti ubuntu' - basicamentye esse 'ti' no comando, significa que eu quero que o docker execute um container mas que exista um terminal e interatividade, ou seja, poder conectar com esse container. quando utilizo esse comando, é perceptível que, o host/user do computador será alterado, antes se estava com um nome x, agora estará como se o container estivesse conectado (e está), vaio aparecer o código do container. se eu quiser sair do conatiner, é necessário utilizar o comando 'exit'
+
+se depois do 'exit' eu executar 'docker container ls', ele não irá trazer mais o container, pois op mesmop não está mais em execução, agora quando aidcionarmos o '-a', será exibido no terminal.
+
+'docker container run -ti centos' (esse centos se pronuncia cent O S) - 
+
+se eu quero sair do container mas sem matar o container (bash), utilizo o comando:
+ctrl + p + q
+
+se utilizar o comando 'docker container ls' em seguida aparecerá o mesmo em execução.
+
+se eu quiser conectar novamente o container que acabamos de sair, utilizamos o comando:
+
+docker container attach - e em seguida o id do container ou o nome dele, ambos funcionam, exemplo:
+docker container attach pedantic_sanderson - esse é o nome
+docker container attach 19e058c76bf5 - id exemplo
+
+
+se executarmos o comando:
+'docker container run -ti nginx'
+
+ele faz o pull, não tem imagem, mas o terminal vai ficar quebrado, parecendo que a máquina está travada.
+
+isso acontece por conta do comando 'ti' basicamente estamos pedindo por interatividade, o container do nginx não tem como entre-point o bash, ele tem como entrepoint o próprio processo do nginx, então quando o console está "travado", é piorque estamos conectados ao processo do nginx
+ 
+
+para solucionar, podemos dar um ctrl + c
+
+e depois
+
+'docker container ls' o container do nginx não aparece em execução mas ao adicionar o -a, aparecerá.
+
+se eu quiser conectar sem erro no console, ou seja, conectando no container, não no processo do nginx. por isso utilizaremos o '-d- que seria daemon:
+
+'docker container run -d nginx' 
+'docker container ls' - aparecerá o mesmo em execução.
+
+de qualquer forma ficaríamos nesse loop, utilizando o comando attach + o id do container nginx, o console travado, depois ctrl + c, então, como entramos nele?
+
+utilizando o comando:
+
+docker container exec -ti (+ id do container, e depois qualuer comando, ls, ps -ef...)
+
+utilizamos 'cd /usr/share/nginx 
+depois que mudarmos de diretório, podemos usar os comandos: 
+ls - no exemplo, ele retornou o arquivo html
+depois 'cd html/'
+'ls'
+'apt-get update'
+'apt-get install curl'
+'y'
+'curl localhost' - ele retornará a página html do nginx
+
+----
+
+'docker container start (+id do container)' - inicia um container do docker que está parado
+'docker container stop ("")' - encerra um container de forma normal e segura
+'docker container restart ("")' - inicia um contaiuner que está em execução ou parado.
+
+'docker container inspect (id ou nome do container) - irá mostrar todas as informações do determinado container.
+
+'docekr container exec -ti gheusgjhikr bash'
+
+'docker container pause (id ou nome)' - pausa o container
+
+'docker container unpause (")' - enter + curl o container volta a responder
+
+'docker container prune' - remove todos os containers parados de uma só vez
+ 
+para remover um container utilizamos o comando: 
+'docker container rm (+ id ou nome do container)'
+
+caso o container esteja em execução, vai dar um erro, seria necessário parar o container para depois removê-lo, mas podemos utilizar um comando para forçar e remover direto.
+
+'docker container rm -f (id ou nome)' - agora sim.
+
+caso você não queira digitar todos os digitos do id, somente os 3 primeiros digitos já bastam :)
+
+depois de criar vários containers, mesmo que eles não estejam mais quando executamos 'docker container ls', ainda é visto no comando 'docker container ls -a', para apagar tudo, utilizamos o comando 'docker container rm (id ou nome um por um de todos os containers que estão na lista).
+
+o que é entrepoint - principal processo do container, que seria o bash, quando "matamos" o bash matamos o principal processo do container.
+
+
+docker container stats + id ou nome - mostra io id, nome, utilização da cpu, memória, net i/o e blocos
+
+para ver a rede subindo, cpu um poucoi também, podemos utilizar o comando:
+
+while true: do curl (id); done
+
+
+apt-get update && apt-get install stress - causa um stress na máquina, fazendo com que os valores de utilização se alterem sem parar, é possível ver.
+
+>>>
+
+docker container ls
+
+docker container inspect +id
+
+   no inspect pegaremos o id do container
+   
+curl + ip
+agora estaremos utilizando a net, também é possível ver alterações no terminal.
+
+para ver mais ainda:
+
+docker container -ti 17a bash --- esse 17a são os 3 primeiros dígitos do id
+
+
+apt-get update && apt-get install stress
+
+
+docker container top +id - mostra o que está causando stress na máquuina, informações do processo em execuçãpo.
+
+*desativar o swap
+
+o que é volume? forma de colocar um filesystem dentro de um container
+
+mkdir /apt/giropops
+docker container run -ti --moumt type=bind
+
+
+DIA 2: 
+
+se adicionarmos dados no container e acontecer de apagarmos o container, iremos perder todos os dados, o volume está aqui para resolver, pois ele vai preservar esses dados, depois podemos utilizar esses mesmos dados em um outro container que vamos subir futuramente.
+
+volume então é basicamente uma forma de colocarmos um filesystem dentro de um container.
+
+existem dois tipos de volume no docker, sendo eles:
+mount:  bind - é quando já temos um dioterório e queremos montar um específico dentro do container, 
+volume:
+
+começando pelo bind, ele funciona pra diretórios já criados, então por exemplo:
+
+mkdir /opt/giropops   - mkdir já vimos e significa "make directory", cria um diretório, opt para armazenar programa e em seguida o nome que queremos dar para o diretório.
+
+em seguida podemos utilizar:
+
+'docker container run -ti --mount type=bind,src=/opt/giropops,dst=giropops debian' (tipo bind, dts significa destination) (podemos adicionar o ro no comando, deixando ele apenas no modo leitura, que seria): 'docker container run -ti --mount type=bind,src=/opt/giropops,dst=giropops,ro debian'
+
+depois desse comando já estamos dentro do container.
+
+podemos acessá-lo:
+
+cd giropops
+ls
+touch teste
+ls - deve retornar "teste"
+
+
+depois 'exit' matando o container, ou seja, teoricamente perderíamos o arquivo salvo no container.
+porém se acessarmos:
+'cd /opt/giropops/'
+e depois 'ls'
+o arquivo 'teste' ainda estará lá.
+
+podemos criar novamente um novo container até com o mesmo nome, com o mesmo comando: 
+'docker container run -ti --mount type=bind,src=/opt/giropops,dst=giropops debian' - obviamnete é possível a criação do mesmo, o id que ele retornará é diferente, mas o arquivo 'teste' automaticamente irá ser direcionado ao mesmo, se quisermos criar mais arquivos também é possível, e se quisermos excluir, também é possível, mas só é possível se o comando não tiver sido executado em RO, caso tenha sido, ao tentarmos excluiir, aparecerá um erro.
+
+esse é o volume tipo bind.
+
+- - - - -  - - - - - - - -
+
+agora vamos para o volume do tipo volume. (eles são sub-comandos)
+
+'docker volume ls'
+'docker volume create giropops'
+'docker volume ls' - deve retornar 'giropops'
+'docker volume inspect giropops' - deve retornar as especificações, um ponto interessante é que no "mountpoint" ele deve retornar "/var/lib/docker/volumes/giropops/_data", pois todos os volumes vão estar nesse endereço, temos que entrar no diretório "_data".
+
+'cd /var/lib/docker/volumes/
+'ls'
+(deve retornar giropops)
+'ls'
+(deve retornar data)
+'cd _data/'
+'touch GIROPOPS'
+'touch STRIGUS'
+'ls'
+
+
+'docker container run -ti --mount type=volume,src=giropops,dst=/giropops debian' - source é o nome do volume, na seguida tem o nome do volume.
+
+podemos dar um enter em seguida e assim estaremos dentro do container.
+
+'ls'
+'cd giropops'
+'ls'
+'touch teste' - 'teste' é um dos nomes do volume, no caso é o que acabamos de criar.
+'exit' - matando o container
+'docker container ls' - vai estar vazio
+'/var/lib/docker/volumes' - entramos no endereço 
+'ls'
+retornará 'giropops metadata.db'
+'cd giropops'
+'ls'
+'cd _data/'
+'ls' - retornará os volumes.
+
+
+
+
+- - - - - - - - - - - -  - - 
+
+'docker volume prune' - apagará tudo o que é volume que não está sendo utilizado por nenhum container. - o 'prune' poderá ser utilizado em outros subcomandos com a sua função.
+
+'docker container create -v /opt/giropops/:/giropops --name dbdados centos + enter
+(a diferença entre run, é que além da criação do container, ele vai executar, agora o create, só criar o container).
+
+'docker container run -d -p 5432:5432 --name pgsql1 --volumes-from dbdados \ -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS=docker \ -e PO STGRESQL_DB=docker kamui/postgresql' (esse -d significa daemon, esse '-p' significa porta, esse '-e' é para caso eu queira passar alguma variável de ambiente dentro do container. já esses com SQL, seria user e senha, kamui seria a imagem.)
+
+depois disso tiramos as '\' do comando e damos enter, ele deve criar, baixar a imagem, e em seguida vamos criar um segundo carinha, mesmo comando mas mudamos o nome e a porta, podemos escolher um outro valor desde que não seja igual ao anterior.
+
+porém, quando damos esses comandos, eles não serão criados no diretório 'opt' e sim no _data, essa imagem gerada teria ficado no giropops, preciso que ela fique no _data
+nesse caso damos um ' docker ls', copiamos os ids e com o comando 'docker container rm -f keafjwek kwejfiweo' e depois removemos o 'dbdados'
+depois vamos criar novamente mas dessa vez dentro do _data, por exemplo:
+'docker container cerate -v /opt/giropops/:/data --name dbdados centos' (+enter em seguida)
+
+em seguida fazemos os dois 'run' dos dois carinhas que já havíamos feito:
+
+'docker container run -d -p 5432:5432 --name pgsql1 --volumes-from bddados -e POSTGRESQL_USER=docker -e POSTGRESQL_PASS docker -e POSTGRESQL_DB=docker kamui/postgresql (+ enter) - e em, seghuida fazer a mesma coisa com o segundo.
+
+quando damos o comando 'docker container ls -a', percebemos que ambos estão quebrando, eles executam, depois param, e assim por diante...
+
+isso porque estamos utilizando o bind e o tipo dele é hoot
+
+para isso mais uma vez apagamos todos e criamos, mas vamos tirar a localização, pra não ficar dando erro, por exemplo:
+'docker container create -v /data --name dbdados centos
+ 
+depois fazemos o 'run' dos dois, do mesmo jeito que havíamos feito anteriormente.
+
+podemos agora fazer novamente o 'docker container ls -a' para ver se rolou.
+
+'cd _data/
+'ls'
+vai retornar todos os dados gerados.
+
+
+- - - - - - - - - - - - - - - - - - -
+
+BACKUP
+
+sabemos que o nosso bd está rodando mas suponhamos que queremos fazer o nosso backup, podemos criar um container para isso:
+
+'mkdir /opt/backup' - criamos o diretório "backup"
+'docker container run -ti --mount type=volume,src=dbdados,dst=/data' - relembrando, -ti significa terminal interativo, depois mount é qual volume que vou utilizar, significa qual tipo de volume vamos utilizar, src (source), dst é destination, poderíamos escolher mas nesse caso deixamos no /data mesmo. entretanto precisamos montar um diretório onde vai salvar o backup. então ainda na mesma linha desse comando, adicionamos:
+
+
+
+docker container run -ti --mount type=volume,src=dbdados,dst=/data --mount type=bind,src=/opt/backup,dst=/backup debian tar -cvf /backup/bkp-banco.tar /data
+
+(ali abrimos um outro tipo de volume (mount), que vai ser dessa vez do tipo bind, pois relembrando, tipo bind é quando já existe um diretório (que no caso é o backup), src é opt/backup e o dts o próprio backup. depois precisamos escolher a distribuição, que no caso é o debian, depois se só déssemos o enter, ele cairia dentro do container mas não executaria o backup, por isso utilizaremos o tar, que é o comando no linux para fazer pacotes, empacotar dados, depois do tar devemos adicionar o formatop que queremos, -cvz, opu -cvzf (para compactar em targz, mas como sío queremos empacotar, utilizaremos -cvf), na frente é onde queremos salvar o backup + o nome que vamos dar, depois o diretório que vamos fazer o backup. esse 'data' é do linux mesmo, não o mesmo que '_data'.
+
+cvf - c para (C)riar o pacote
+v - (V)erboso, serve para mostrar o que está sendo feito.
+f- e o (F) indica o arquivo que ele vai criar, que ali no caso é o que está logo na frente.
+
+agora temos dois volumes, o primeiro onde vamos fazer o backup e o outro onde vamos guardar o backup.
+
+depois ele deve mostrar diversas informações, isso por conta do verboso, para ver se deu certo:
+
+ls
+cd /opt/backup
+ls
+tar -xvf bkp.banco.tar
+
+
+- - - - - - - - - - - -
+
+
+DOCKERFILE - onde vamos começar a criar e gerenciar imagens.
+
+mas O QUE É UMA IMAGEM SOFIA?
+basicamente é um container parado, um container que não está em execução, é o que nós dá a possibilidade de criar um container, um container para ser criado, é baseado em uma imagem. 
+
+*dica*: quando estivermos em produção, não utilizar imagens de terceiros, que vimos na internet, o docker é seguro quando se utiliza imagens próprias, o que tornaria o docker não segura seria utilizar imagens impróprias, não confie! 
+
+Vamos criar as nossas próprias imagens, mas pra isso precisamos criar um diretório.
+
+'mkdir dockerfiles' 
+'cd dockerfiles/'
+'ls'
+'mkdir 1' - criando mais um diretório.
+'vim Dockerfile' - criando um dockerfile, dentro dele vamos inserir:
+FROM debian
+
+RUN apt-get update && apt-get install -y apache2 && apt-get clean
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_RUN_GROUP="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+LABEL description="Webserver"
+
+VOLUME /var/www/html/
+EXPOSE 80
+
+agora entendendo um piouco melhor sobre:
+
+o 'FROM' significa que estamos nos baseando no debian.
+o 'RUN' é um parâmetro que fala "executa esse comando durante a criação do container", basicamente, essa linha tem vários comandos pois precisa ser executada dessa maneira, se colocássemos por exemplo o 'apt-get clean' na linha de baixo, não iria rolar, pois como já sabemos, é formado em camadas, outra linha seria outra camada, e não podemos fazer alterações nas camadas inferiores, somente na mais recente, então ele precisaria apagar alguns pacotes desnecessários, se fosse em outra linha, não funcionaria.
+
+
+'ENV' como já sabemos, é uma variável de ambiente, todas ali são de necessidade do apache, tem que estar ali
+
+'VOLUME' serve para renomear o volume por um nome mais curto e bonito, pois se não iria no automático aquele nome gigante
+
+'EXPOSE' 80, quer dizer que a porta 80 do container está em execução.
+caso eu der o comando 'docker container run -ti -p 8080:80'
+'docker container run -ti -P - esse P buscará na imagem do container, lá no EXPOSE, e dar uma porta aleatória, o p minúsculo, já está especificado qual porta queremos, ou seja, é melhor.
+
+enfim, depois precisamos salvar esse arquivo: :wq + enter (w salva e q sai)
+
+depois executamos: 'docker image build -t meu_apache:1.0.0 .'
+se não utilizarmos o t, a tag vai subir sem nome e não é legal, o nome no caso é o que está a frente.
+
+depois ele vai realizar a execução e mostrar diversooooos comandos dos quais ficariam todos lá, se não adicionássemos o comando "clean".
+
+depois quando dermos o comando
+'docker image ls'
+mostrará as informações da criação e tudo mais da imagem, porém de forma reduzida e mais organizada.
+
+conforme a aula foi rolando vimos que o comando "clean" não tem mais necessidade, pois ele já executa tirando todo esse lixo, com ou sem o comando, então mais fácil nem executá-lo.
+
+-
+
+ENTRYPOINT - É o primncipal processo do container, é como se fosse o 'init'.
+
+* um container tem que estar sempre rodando em primeiro plano, não em daemon nem em background.docker 
+
+***dockfile parte 2:
+
+depois de salvar, ':wq'
+
+utilizamos o co0mando:
+
+'docker imaghe build -t meu_apache:1.0.0 .'
+esse '-t' é uma tag, é onde vamos nomear, e o '1.0.0' é a versão.
+ esse comando deve retornar diversas informações citando os citados acima, e no final deve buildar.
+ 
+o ENTRYPOINT no caso, vem acompanhado do binário do apache ctl, que é o cara que sobe o apache, esse é o processo principal, se isso morrer o container morre.
+'ENTRYPOINT ["/usr/sbin/apachetl"]'
+'CMD' - Se o ENTRYPOINT não existisse poderíamos colocar o binário do apache nesse comando, é como se servisse para substituir o ENTRYPOINT, CMD pode chamar qualquer comando. Mas nesse caso, utilizaremos:
+CMD ["-D", "FOREGROUND"] - Esse modo é como se fosse uma lista em python, é chamado de modo exec, a recomendação da documentação do docker, fala que esse modo é o preferido, mas poderíamos usar diretamente no CMD ambos:
+CMD /usr/sbin/apachectl -D FOREGROUND - esse é o modo shell, não podemos usar os dois modos, ou utilizamos o exec ou o shell. Esse -D FOREGROUND basicamente serve para o processo do apache rodar no primeiro plano.
+
+salvamos :)
+
+depois podemos subir
+
+'docker container run -d -p 8080:80 meu apache:2.0.0'
+o 'p' é a porta e em seguida a entrada, o -d é o que havíamos selecionados anteriormente, é necessário estar ali.
+
+'curl localhost:8080'
+deve trazer o index, se sim, está funcionando certo :)
+
+agora vamos adicionar mais um novo comando na criação da imagem, depois dos 'ENV', adicionamos o 'COPY index.html /var/www/html/'
+basicamente, COPY (copia) o index.html (que deve estar localizado no mesmo lugar que o dockerfile, e em seguida é o endereço do diretório que queremos copiar para. depois de salvarmos novamente o comando.
+
+criar o arquivo:
+'vim.index.html'
+dentro colocamos:
+GIROPOPS STRIGUS GIRUS - qualquer conteúdo. - depois salvamos de novo.
+
+depois podemos buildar novamente, como apache 3.0.0 dessa vez.
+
+'docker image build -t meu_apache:3.0.0 . '
+
+'docker container ls'
+
+'curl localhost:8000' - deve retornar o conteúido que adicionamos 'GIROPOPS STRIGUS GIRUS', se eu quiser ir pra dentro do container:
+'docker container exec -ti 3568735720s bash (esse código é o id do container)
+'cd /var/www/html# ls' - deve retornar 'index.html'
+'cat index.html' - deve retornar GIROPOPS STRIGUS GIRUS
+
+podemos apagar todos os container que estão em execução:
+'docker container rm -f fdwuiefh iufrjhiauswf qJKSDOWIQFU ahoiwfjdfv + enter
+
+detalhe, para acessar o dockerfile utilizamos o comando: vim Dockerfile
+
+agora utilizaremos o comando 'ADD' ao invés do 'COPY', que seria:
+'ADD index.html /var/www/html/' e adicionamos também o USER, por enquanto estamos assim:
+
+FROM debian
+
+RUN apt-get update && apt-get install -y apache2
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_RUN_GROUP="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+ADD index.html /var/www/html/
+
+LABEL description="Webserver"
+LABEL version="1.0.0"
+
+USER www-data
+
+WORKDIR /var/www/html
+
+VOLUME /var/www/html/
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/apachectl"]
+CMD ["-D", "FOREGROUND"]
+
+depois podemos salvar e dar um 'build' novamente:
+'docker image build -t meu_apache:4.0.0 .
+
+depois o run:
+'docker container run -d -p 8080:80 meu_apache:4.0.0'
+
+muito provavelmente ele não vai subir por conta do 'user', podemos voltar para o Dockerfile e editar algumas configurações lá, é recomendado que não utilizaremos o root e sim um usuário convencional. mas nesse caso não rodou, por isso mantemos utilizando o root.
+
+DOCKERFILE MULTISTAGE:
+
+Vamos criar um novo diretório, nesse caso seria o 4.
+'mkdir 4'
+'ls' - pra mostrar os diretórios
+'cd 4' - para mudar de diretório para o 4
+'ls'
+
+depois vamos criar uma aplicação 'go'
+'vim meu_go.go 
+ele vai retornar "GIROPOPS STRIGUS GIRUS'
+podemos salvar ':q'
+
+depois vamos criar um dockerfile novo
+
+FROM golang (a distribuição/imagem estará pronta pra rodar em golang)
+
+WORKDIR /app - onde ele deve trabalhar, que é no app
+ADD . /app - copioarb tudo o que tá no nível para o /app
+RUN go build -o meugo - o RUN dele é o go build + o nome da aplicação.
+ENTRYPOINT ./meugo
+salvar e sair.
+
+'docker image build -t meugo:1.0 .
+
+'docker container run -ti meugo:1.0 - tem que imprimir "giropops strigus girus'
+
+PT 2 DOCKERFILE MULTISTAGE
+
+vamos sair da aplicação e voltar um diretório com:
+'cd ..'
+'cp -R 4 5'
+'cd 5'
+'vim Dockerfile'
+'ls'
+'vim Dockerfile'
+
+FROM golang AS buildando
+
+WORKDIR /app
+ADD . /app
+RUN go build -o meugo
+
+
+FROM alpine - multistage faz com que seja permitido ter 2 from na mesma aplicação
+WORKDIR /giropops
+COPY --from=buildando /app/meugo /giropops- isso vai copiar o 'meugo' ali de cima
+ENTRYPOINT ./meugo
+
+salvar e sair
+
+na hora de buildar:
+'docker image build -t meugo:2.0 .'
+'docker container run -ti meugo:2.-0' - para ver se está rodando, deve retornar "giropops strigus girus"
+ ele vai armazenar um valor muitoooo mais baixo, coisa de 7MB, por conta da maneira em que fizemos.
+ 
+ 
+ 
+ 
+ IMAGES E COMMIT - ESSA AULA POSSUI UM resumaaaaaaaao, muito boa para relembrar comandos!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 
+mudando de diretório para o 3
+
+'cd ..'
+'cd 3'
+'vim Dockerfile'
+ele se encontra assim:
+FROM debian
+
+RUN apt-get update && apt-get install -y apache2
+RUN chown www-data:www-data /var/lock && chown www-data /var/run && chown www-data:www-data /var/log/
+ENV APACHE_LOCK_DIR="/var/lock"
+ENV APACHE_PID_FILE="/var/run/apache2.pid"
+ENV APACHE_RUN_USER="www-data"
+ENV APACHE_RUN_GROUP="www-data"
+ENV APACHE_LOG_DIR="/var/log/apache2"
+
+ADD index.htmlç /var/www/html/
+HEALTHCHECK --interval=1m --timeout=3s \ - adicionamos o HEALTHCHECK que dá um intervalo de 1minuto, se demora 3 segundos para pegar e responder ele sai, se falhar no localhost ele pega e sai do container.
+ CMD curl -f http://localhost/ || exit 1
+LABEL description="Webserver"
+LABEL version="1.0.0"
+
+USER root
+
+WORKDIR /var/www/html/
+
+VOLUME /var/www/html/
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/apachectl"]
+CMD ["-D", "FOREGROUND"]
+
+depois saímos e podemos buildar
+'docker image build -t meu_apache:5.0.0 .'
+depois o run:
+'docker container run -d -p 8000:80 meu_apache:5.0.0'
+as vezes pode acontecer de dar um erro por ter outro container rodando na mesma porta, então podemos alterar a porta.
+
+'docker container ls' - deve aparecer o 'STATUS', e em () o health, que ficará atualizando de 1 em 1 minuto como foi configurado, caso dê algum erro, ele avisará. 
+
+no caso dessa aplicação, passou um minuto mas o health continuou "starting", para checar o que está de errado podemos dar um curl
+'curl localhost:8000' - retornará GIROPOPS STRIGUS GIRUS
+
+'docker exec -ti (id do container) bash'
+'cut index.html index.html'
+
+descobrimos que ele não tem o comando 'curl', por isso ele está nesse loop starting
+
+podemos sair utilizando 'exit'
+
+para remover todos os containers:
+'docker container rm -f $(docker ps -q)' - ele retorna os ids dos containers removidos.'
+
+'vim Dockerfile' - vamos editar o primeiro 'RUN', FICANDO:
+
+run apt-get update && apt-get install -y apache2 curl - salvamos e saímos
+
+'docker image build -t meu_apache:5.0.0 .' - depois de buildar, faremos:
+
+'docker container run -d -p 8000:80 meu_apache:5.0.0'
+'docker container ls'
+
+agora sim, após adicionarmos o 'curl' no Dockerfile, temos um retorno no health, após 1 minuto, estava tudo certo, então ele retornou "healthy" que seria saudável, não há erros para ser corrigido, se houvessem erros, ele retornaria "unhealthy".
+
+-
+
+se por exemplo, esqueci de nomear um repositório já enviado, como fazer para nomear?
+
+'docker image  tag (id) ubuntu_vim_curl:1.0' a escrita após o id seria o nome que queremos dar, depois podemos dar enter.
+
+para confirmar se deu certo, utilizaremos o comando 'docker image ls', que deve retornar com o nome atualizado.
+
+'docker container run -ti ubuntu_vim_curl:1.0'
+'cat /etc/issue' - deve retornar GIROPOPS STRIGUS GIRUS
+
+estamos na metade do curso, faltam mais 25 aulas, vamos para um próximo arquivos.</p>
